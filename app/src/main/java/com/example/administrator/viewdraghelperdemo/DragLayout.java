@@ -23,6 +23,7 @@ public class DragLayout extends FrameLayout {
     private ImageView mImageCover;
     private int mCoverImageInitX;
     private int mCoverImageInitY;
+    private int mMaxTop;
 
     public DragLayout(Context context) {
        this(context,null);
@@ -41,10 +42,11 @@ public class DragLayout extends FrameLayout {
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
+                getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 mCoverImageInitX =  mImageCover.getLeft();
                 mCoverImageInitY =  mImageCover.getTop();
                 Log.d(TAG, "onGlobalLayout: "+mCoverImageInitX+":::"+mCoverImageInitY);
-                getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                 mMaxTop =  getHeight()-mBar.getHeight();
             }
         });
 
@@ -125,9 +127,22 @@ public class DragLayout extends FrameLayout {
          */
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
-
+                if(mCover.getTop()>mMaxTop/2){
+                    mViewDragHelper.smoothSlideViewTo(releasedChild,0,mMaxTop);
+                }else {
+                    mViewDragHelper.smoothSlideViewTo(releasedChild,0,0);
+                }
+            invalidate();
         }
     };
+
+    //计算滚动距离
+    @Override
+    public void computeScroll() {
+        if(mViewDragHelper.continueSettling(true)){
+            invalidate();
+        }
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
