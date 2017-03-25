@@ -102,12 +102,19 @@ public class DragLayout extends FrameLayout {
             int max = getHeight()-mBar.getHeight();
             float rate = top*1.0f/max;
             mBar.setTranslationY(-top);//白色孩子走多远，bar走多远
+            //底部图片的缩放
             mBar.setScaleX(1-rate*2/5);
             mBar.setScaleY(1-rate*2/5);
             mBar.setPivotX(mBar.getWidth());
-            //
+            //中间图片的偏移
+            mImageCover.setTranslationX(-rate*mCoverImageInitX);
+            mImageCover.setTranslationY(-rate*mCoverImageInitY);
+            //中间图片的缩放
+            mImageCover.setScaleX(1-rate*3/5);
+            mImageCover.setScaleY(1-rate*3/5);
 
-
+            mImageCover.setPivotX(20);
+            mImageCover.setPivotY(20);
         }
 
         /**
